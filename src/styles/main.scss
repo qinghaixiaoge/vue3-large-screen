@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* 使用rem布局，重置body的font-size为16px */
+body {
+    font-size: 16px;
+    overflow: hidden;
+    background-color: #161522;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
