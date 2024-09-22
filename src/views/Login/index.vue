@@ -56,6 +56,7 @@ const login = async () => {
   justify-content: center;
   align-items: center;
   background-color: #f2f2f2;
+
   .container {
     width: 300px;
     background-color: #fff;

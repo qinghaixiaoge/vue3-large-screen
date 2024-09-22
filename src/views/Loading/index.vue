@@ -12,7 +12,7 @@ const router = useRouter();
 const store = useStore();
 
 watch(()=>store.getters["loginUser/status"],(newValue)=>{
-    console.log("watch");
+    // console.log("watch");
     if (newValue === "login") {
         router.push(route.query.returnUrl || "/home")
     }else if(newValue === "unlogin"){

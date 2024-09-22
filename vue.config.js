@@ -9,10 +9,16 @@ module.exports = defineConfig({
   lintOnSave: false,
   productionSourceMap: false,
   chainWebpack: config => {
+    config.plugin('define').tap(args => {
+      args[0]['process.env'].MY_BASE_URL = JSON.stringify(process.env.MY_BASE_URL)
+      args[0]['process.env'].XIAO_YU = JSON.stringify(process.env.XIAO_YU)
+      return args
+    })
+    console.log(process.env.NODE_ENV);
     if (process.env.NODE_ENV === "production") {
       config.plugin("html")
         .tap(args => {
-          args[0].title = "大屏项目";
+          args[0].title = "自适应大屏项目";
           args[0].cdn = cdn;
           return args;
         }).end()

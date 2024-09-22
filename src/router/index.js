@@ -1,6 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import routes from "./routes"
 import store from "@/store"
+
+let routes = []
+const routerContext = require.context("./", true, /index\.js$/)
+routerContext.keys().forEach(route => {
+  if (route.startsWith("./index")) return
+  const routeModule = routerContext(route)
+  routes = [...routes, ...(routeModule.default || routeModule)]
+})
+
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
@@ -8,7 +16,7 @@ const router = createRouter({
 // 刷新from.path = '/'
 router.beforeEach((to, from, next) => {
   const status = store.getters["loginUser/status"]
-  console.log(status, to.path);
+  // console.log(status, to.path);
   if (to.meta.auth) {
     if (status === "login") {
       console.log("已登录");

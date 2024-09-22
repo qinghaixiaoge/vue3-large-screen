@@ -1,8 +1,9 @@
 import store from '@/store'
 import axios from 'axios'
+import router from "@/router"
 
 const instance = axios.create({
-    baseURL: process.env.NODE_ENV === 'production' ? "【服务器node访问接口】" : "http://192.168.0.106:3000/",
+    baseURL: process.env.MY_BASE_URL,
     timeout: 5000
 })
 
@@ -22,6 +23,7 @@ instance.interceptors.response.use(res => {
         console.log("清除token和仓库的用户信息");
         window.localStorage.removeItem('token')
         store.commit("loginUser/setUser", null)
+        router.push("/login")
     }
     return res.data
 }, err => {
