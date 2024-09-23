@@ -11,8 +11,8 @@ export const $login = async function (params) {
     return instance.post('/login', params)
 }
 
-export const $whomai = async function () {
-    return instance.get('/whomai')
+export const $whoami = async function () {
+    return instance.get('/whoami')
 }
 
 export const $loyout = async function () {

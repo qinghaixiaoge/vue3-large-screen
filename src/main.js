@@ -5,9 +5,13 @@ import store from './store'
 import "@/styles/main.scss"
 import "@/styles/iconfont.scss"
 import scale from "@/directive/scale"
-import registerGlobalComponents  from './components'
-store.dispatch("loginUser/whomai")
+import registerGlobalComponents from './components'
+const token = localStorage.getItem("token")
+// 没token，跳转到鉴权页，无需去发包，直接跳转登录页即可
+if (token) {
+    store.dispatch("loginUser/whomai")
+}
 const app = createApp(App)
 registerGlobalComponents(app)
-app.directive("scale",scale)
+app.directive("scale", scale)
 app.use(store).use(router).mount('#app')

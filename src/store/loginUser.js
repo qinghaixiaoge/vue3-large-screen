@@ -1,4 +1,4 @@
-import { $login, $whomai, $loyout } from "@/apis/api"
+import { $login, $whoami, $loyout } from "@/apis/api"
 
 export default {
     namespaced: true,
@@ -28,16 +28,26 @@ export default {
     actions: {
         async login(ctx, payload) {
             ctx.commit("setLoading", true)
-            const res = await $login(payload)
-            ctx.commit("setLoading", false)
-            ctx.commit("setUser", res.data)
-            return res
+            try{
+                const res = await $login(payload)
+                ctx.commit("setUser", res?.data)
+                return res
+            }catch (err) {
+                console.log(err);
+            } finally {
+                ctx.commit("setLoading", false)
+            }
         },
         async whomai(ctx) {
             ctx.commit("setLoading", true)
-            const res = await $whomai()
-            ctx.commit("setLoading", false)
-            ctx.commit("setUser", res.data)
+            try {
+                const res = await $whoami()
+                ctx.commit("setUser", res?.data)
+            } catch (err) {
+                console.log(err);
+            } finally {
+                ctx.commit("setLoading", false)
+            }
         },
         async loyout(ctx) {
             ctx.commit("setLoading", true)

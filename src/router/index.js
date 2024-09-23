@@ -39,8 +39,7 @@ router.beforeEach((to, from, next) => {
       })
     }
   } else {
-    const token = localStorage.getItem("token")
-    if (to.path === "/login" && status === "loading" && token) {
+    if (to.path === "/login" && status === "loading") {
       next({
         path: "/loading"
       })

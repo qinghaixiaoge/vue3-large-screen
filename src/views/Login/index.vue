@@ -33,19 +33,13 @@ const formData = reactive({
   loginPwd: '123456'
 })
 const login = async () => {
-  try {
-    isLoading.value = true
-    const { code, msg, data } = await store.dispatch("loginUser/login", formData)
-    isLoading.value = false
-    if (code) {
-      // 跳转到Home页面
+  isLoading.value = true
+    const res = await store.dispatch("loginUser/login", formData)
+    console.log(res,res?.code);
+    if (res?.code) {
       router.push(route.query.returnUrl || "/home")
-    } else {
-      alert(msg)
     }
-  } catch (err) {
-    console.log(err)
-  }
+    isLoading.value = false
 }
 
 </script>

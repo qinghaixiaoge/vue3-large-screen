@@ -10,6 +10,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@styils/vue": "^1.1.7",
     "axios": "^1.7.7",
     "core-js": "^3.8.3",
     "echarts": "^5.4.1",
