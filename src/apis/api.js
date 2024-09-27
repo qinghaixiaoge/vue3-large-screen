@@ -50,8 +50,3 @@ export const $getStock = async function () {
 export const $getTrend = async function () {
     return instance.get('/getTrend')
 }
-
-// 取消令牌映射测试接口
-export const $getPromise = async function (params) {
-    return instance.get(`/promise`,{params})
-}

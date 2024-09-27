@@ -24,7 +24,6 @@
 import { onBeforeUnmount, reactive, ref } from 'vue'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { $getPromise } from '@/apis/api';
 import { cancelAllRequest } from "@/utils/request"
 const route = useRoute()
 const router = useRouter();
