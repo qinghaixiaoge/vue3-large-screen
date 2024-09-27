@@ -1,10 +1,10 @@
 import instance from "@/utils/request"
 
-function delay(duration=2000){
-    return new Promise(resolve=>{
-        setTimeout(()=>{
+function delay(duration = 2000) {
+    return new Promise(resolve => {
+        setTimeout(() => {
             resolve()
-        },duration)
+        }, duration)
     })
 }
 export const $login = async function (params) {
@@ -49,4 +49,9 @@ export const $getStock = async function () {
 
 export const $getTrend = async function () {
     return instance.get('/getTrend')
+}
+
+// 取消令牌映射测试接口
+export const $getPromise = async function (params) {
+    return instance.get(`/promise`,{params})
 }

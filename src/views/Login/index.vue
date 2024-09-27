@@ -21,9 +21,11 @@
   </div>
 </template>
 <script setup>
-import { reactive, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
+import { onBeforeUnmount, reactive, ref } from 'vue'
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { $getPromise } from '@/apis/api';
+import { cancelAllRequest } from "@/utils/request"
 const route = useRoute()
 const router = useRouter();
 const store = useStore()
@@ -32,14 +34,42 @@ const formData = reactive({
   loginId: 'admin',
   loginPwd: '123456'
 })
+/* onBeforeUnmount(() => {
+  console.log("销毁所有请求");
+  cancelAllRequest && cancelAllRequest()
+}) */
+
+onBeforeRouteLeave((req, res, next) => {
+  console.log("销毁所有请求");
+  cancelAllRequest()
+  next()
+})
 const login = async () => {
+  // 取消令牌映射
+  /*   $getPromise({ id: 1 }).then(res => {
+      console.log("success====>", res);
+    }).catch(err => {
+      console.log("err====>", err);
+    })
+    $getPromise({ id: 2 }).then(res => {
+      console.log("success====>", res);
+    }).catch(err => {
+      console.log("err====>", err);
+    })
+    $getPromise({ id: 3 }).then(res => {
+      console.log("success====>", res);
+    }).catch(err => {
+      console.log("err====>", err);
+    })
+    console.log(6666);
+    router.push("/hot")
+    console.log(7777); */
   isLoading.value = true
-    const res = await store.dispatch("loginUser/login", formData)
-    console.log(res,res?.code);
-    if (res?.code) {
-      router.push(route.query.returnUrl || "/home")
-    }
-    isLoading.value = false
+  const res = await store.dispatch("loginUser/login", formData)
+  if (res?.code) {
+    router.push(route.query.returnUrl || "/home")
+  }
+  isLoading.value = false
 }
 
 </script>
