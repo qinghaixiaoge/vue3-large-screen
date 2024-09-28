@@ -135,7 +135,10 @@ const successMessage = (message, duration = 2000) => {
 }
 
 const errorMessage = (message, duration = 2000) => {
+    const err = document.querySelector(".error-container")
+    err && err.remove()
     const div = document.createElement("div")
+    div.className = "error-container"
     document.body.appendChild(div)
     render(
         <errorStyle.Div>
