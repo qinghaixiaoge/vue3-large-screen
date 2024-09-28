@@ -2,10 +2,25 @@ import store from '@/store'
 import axios from 'axios'
 import router from "@/router"
 import { Message } from './Message'
+import axiosRetry from 'axios-retry'
 const instance = axios.create({
     baseURL: process.env.MY_BASE_URL,
-    timeout: 5000
+    timeout: 3000
 })
+axiosRetry(instance, {
+    retries: 2, // 设置重试次数
+    retryCondition: (error) => {
+        // 网络错误 或 请求超时 error.response为undefined
+        // 仅在超时情况下重试
+        return error.message.includes("timeout");
+    },
+    onRetry: (retryCount, error, requestConfig) => {
+        console.log(`重试请求: ${requestConfig.url}，次数: ${retryCount}`);
+    },
+    shouldResetTimeout: true,// 每次重试重置超时
+});
+
+
 // 存储所有请求的停止
 window.cancelTokenObject = {}
 instance.interceptors.request.use(config => {
@@ -30,7 +45,6 @@ instance.interceptors.response.use(res => {
     return res.data
 }, err => {
     if (axios.isCancel(err)) {
-        // console.log("请求已取消");
         return Promise.reject(err)
     }
     if (!err.response) {
@@ -50,9 +64,7 @@ instance.interceptors.response.use(res => {
             window.localStorage.removeItem('token')
             store.commit("loginUser/setUser", null)
             // 执行router还是会执行后面的逻辑
-            router.push("/login").then(res => {
-
-            })
+            router.push("/login")
             break;
         case 403:
             // token过期/token注销
@@ -60,9 +72,7 @@ instance.interceptors.response.use(res => {
             window.localStorage.removeItem('token')
             store.commit("loginUser/setUser", null)
             // 执行router还是会执行后面的逻辑
-            router.push("/login").then(res => {
-
-            })
+            router.push("/login")
             break;
         case 404:// 请求地址不存在
             Message.error(errorMessage)

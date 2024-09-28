@@ -65,6 +65,7 @@ const login = async () => {
     console.log(7777); */
   isLoading.value = true
   const res = await store.dispatch("loginUser/login", formData)
+  console.log(res);
   if (res?.code) {
     router.push(route.query.returnUrl || "/home")
   }
