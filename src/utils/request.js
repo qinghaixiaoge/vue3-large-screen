@@ -23,6 +23,24 @@ axiosRetry(instance, {
   shouldResetTimeout: true, // 每次重试重置超时
 });
 
+const httpErrorCode = {
+  401: (errorMessage) => {
+    // 无效的token/不携带token
+    $bus.emit("API:INVALID", errorMessage);
+  },
+  403: (errorMessage) => {
+    // token过期/token注销
+    $bus.emit("API:UN_AUTH", errorMessage);
+  },
+  404: (errorMessage) => {
+    // 请求地址不存在
+    $bus.emit("error_message", errorMessage);
+  },
+  default: (errorMessage) => {
+    $bus.emit("error_message", errorMessage);
+  },
+};
+
 // 存储所有请求的停止
 window.cancelTokenObject = {};
 instance.interceptors.request.use((config) => {
@@ -65,25 +83,9 @@ instance.interceptors.response.use(
     }
     const responseCode = err.response.status;
     const errorMessage = err.response.data.msg;
-    switch (responseCode) {
-      case 401:
-        // 无效的token/不携带token
-        window.localStorage.removeItem("token");
-        // 执行router还是会执行后面的逻辑
-        $bus.emit("API:INVALID", errorMessage);
-        break;
-      case 403:
-        // token过期/token注销
-        window.localStorage.removeItem("token");
-        // 执行router还是会执行后面的逻辑
-        $bus.emit("API:UN_AUTH", errorMessage);
-        break;
-      case 404: // 请求地址不存在
-        $bus.emit("error_message", errorMessage);
-        break;
-      default:
-        $bus.emit("error_message", errorMessage);
-    }
+    httpErrorCode[responseCode]
+      ? httpErrorCode[responseCode](errorMessage)
+      : httpErrorCode["default"](errorMessage);
     return Promise.reject(err);
   }
 );

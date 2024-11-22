@@ -2,10 +2,12 @@ import { createRouter, createWebHistory } from "vue-router";
 import store from "@/store";
 import $bus from "@/utils/bus";
 
-$bus.on("API:INVALID", (errorMessage) => {
+$bus.on("API:INVALID", () => {
+  window.localStorage.removeItem("token");
   router.push("/login");
 });
-$bus.on("API:UN_AUTH", (errorMessage) => {
+$bus.on("API:UN_AUTH", () => {
+  window.localStorage.removeItem("token");
   router.push("/login");
 });
 let routes = [];
