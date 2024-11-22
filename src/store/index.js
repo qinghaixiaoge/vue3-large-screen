@@ -1,16 +1,22 @@
-import { createStore } from 'vuex'
-import loginUser from './loginUser'
+import { createStore } from "vuex";
+import loginUser from "./loginUser";
+import $bus from "@/utils/bus";
 
-export default createStore({
-  state: {
-  },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
+$bus.on("API:INVALID", () => {
+  store.commit("loginUser/setUser", null);
+});
+$bus.on("API:UN_AUTH", () => {
+  store.commit("loginUser/setUser", null);
+});
+
+const store = createStore({
+  state: {},
+  getters: {},
+  mutations: {},
+  actions: {},
   modules: {
-    loginUser
-  }
-})
+    loginUser,
+  },
+});
+
+export default store;

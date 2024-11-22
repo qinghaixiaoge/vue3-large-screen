@@ -1,52 +1,60 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import store from "@/store"
+import { createRouter, createWebHistory } from "vue-router";
+import store from "@/store";
+import $bus from "@/utils/bus";
 
-let routes = []
-const routerContext = require.context("./", true, /index\.js$/)
-routerContext.keys().forEach(route => {
-  if (route.startsWith("./index")) return
-  const routeModule = routerContext(route)
-  routes = [...routes, ...(routeModule.default || routeModule)]
-})
+$bus.on("API:INVALID", (errorMessage) => {
+  router.push("/login");
+});
+$bus.on("API:UN_AUTH", (errorMessage) => {
+  router.push("/login");
+});
+let routes = [];
+const routerContext = require.context("./", true, /index\.js$/);
+routerContext.keys().forEach((route) => {
+  if (route.startsWith("./index")) return;
+  const routeModule = routerContext(route);
+  routes = [...routes, ...(routeModule.default || routeModule)];
+});
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
+
 // 刷新from.path = '/'
 router.beforeEach((to, from, next) => {
-  const status = store.getters["loginUser/status"]
+  const status = store.getters["loginUser/status"];
   // console.log(status, to.path);
   if (to.meta.auth) {
     if (status === "login") {
       console.log("已登录");
-      next()
+      next();
     } else if (status === "unlogin") {
       console.log("未登录");
       next({
         path: "/login",
         query: {
-          returnUrl: to.path
-        }
-      })
+          returnUrl: to.path,
+        },
+      });
     } else {
       console.log("正在登录中");
       next({
         path: "/loading",
         query: {
-          returnUrl: to.path
-        }
-      })
+          returnUrl: to.path,
+        },
+      });
     }
   } else {
     if (to.path === "/login" && status === "loading") {
       next({
-        path: "/loading"
-      })
-      return
+        path: "/loading",
+      });
+      return;
     }
-    next()
+    next();
   }
-})
+});
 
-export default router
+export default router;
