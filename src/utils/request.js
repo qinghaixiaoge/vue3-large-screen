@@ -24,6 +24,9 @@ axiosRetry(instance, {
 });
 
 const httpErrorCode = {
+  400: () => {
+    $bus.emit("error_message", "请求参数格式错误");
+  },
   401: (errorMessage) => {
     // 无效的token/不携带token
     $bus.emit("API:INVALID", errorMessage);
@@ -32,12 +35,16 @@ const httpErrorCode = {
     // token过期/token注销
     $bus.emit("API:UN_AUTH", errorMessage);
   },
-  404: (errorMessage) => {
+  404: () => {
     // 请求地址不存在
-    $bus.emit("error_message", errorMessage);
+    $bus.emit("error_message", "请求地址不存在");
   },
-  default: (errorMessage) => {
-    $bus.emit("error_message", errorMessage);
+  500: () => {
+    // 请求地址不存在
+    $bus.emit("error_message", "服务器错误");
+  },
+  default: () => {
+    $bus.emit("error_message", "未知错误");
   },
 };
 
