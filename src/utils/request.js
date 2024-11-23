@@ -25,6 +25,7 @@ axiosRetry(instance, {
 
 const httpErrorCode = {
   400: () => {
+    // 请求参数格式错误
     $bus.emit("error_message", "请求参数格式错误");
   },
   401: (errorMessage) => {
@@ -40,10 +41,11 @@ const httpErrorCode = {
     $bus.emit("error_message", "请求地址不存在");
   },
   500: () => {
-    // 请求地址不存在
+    // 服务器错误
     $bus.emit("error_message", "服务器错误");
   },
   default: () => {
+    // 未知错误
     $bus.emit("error_message", "未知错误");
   },
 };
